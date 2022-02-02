@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import Shop from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { auth } from './components/firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './components/firebase/firebase.utils';
 import react from 'react';
 
 class App extends react.Component {
@@ -21,9 +21,25 @@ class App extends react.Component {
 
   //Open subscription methos to know the current status of authentication
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user });
-      console.log(user);
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if(userAuth){
+        //Store actual user in DB
+        const userRef = await createUserProfileDocument(userAuth);
+
+        userRef.onSnapshot(snapshot => {
+          // Getting data from snapshot and assign it to state variable
+          this.setState({
+            currentUser: {
+              id: snapshot.id,
+              ...snapshot.data()
+            }
+          });
+
+        });
+      }
+
+      //Set the state to null if userAuth is null
+      this.setState({ currentUser: userAuth });
     });
   }
 
