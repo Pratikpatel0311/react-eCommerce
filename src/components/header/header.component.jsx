@@ -2,7 +2,8 @@ import React from 'react';
 import './header.styles.scss';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 import { Link } from 'react-router-dom';
-import { auth } from '../firebase/firebase.utils';
+import { auth } from '../../firebase/firebase.utils';
+import { connect } from 'react-redux';
 
 function Header({currentUser}) {
     return (
@@ -28,4 +29,9 @@ function Header({currentUser}) {
     );
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+  currentUser: state.user.currentUser
+});
+
+//connect is higher order accepting two arguments one to map states with props
+export default connect(mapStateToProps)(Header);
