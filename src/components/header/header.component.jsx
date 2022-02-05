@@ -2,10 +2,13 @@ import React from 'react';
 import './header.styles.scss';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 import { Link } from 'react-router-dom';
-import { auth } from '../../firebase/firebase.utils';
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-function Header({currentUser}) {
+import { auth } from '../../firebase/firebase.utils';
+import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+
+function Header({currentUser, hidden}) {
     return (
       <div className="header">
         <Link to="/" className="logo-container">
@@ -24,13 +27,18 @@ function Header({currentUser}) {
               :
               <Link className="option" to="/signin">SIGN IN</Link>
           }
+          <CartIcon />
         </div>
+        {
+          hidden?null:<CartDropdown />
+        }
       </div>
     );
 }
 
-const mapStateToProps = (state) => ({
-  currentUser: state.user.currentUser
+const mapStateToProps = ({user:{currentUser},cart:{hidden}}) => ({
+  currentUser,
+  hidden
 });
 
 //connect is higher order accepting two arguments one to map states with props
