@@ -1,6 +1,6 @@
 import React from 'react';
 import './menu-item.styles.scss';
-import withRouter from '../../components/withRouter.component.jsx';
+import withRouter from '../../components/withRouter.component';
 
 const MenuItem = ({ title, imageUrl, size, linkUrl, router }) => (
   <div
